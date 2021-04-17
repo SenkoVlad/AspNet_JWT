@@ -47,14 +47,13 @@
  
             // если запрос прошел нормально
             if (response.ok === true) {
- 
                 // изменяем содержимое и видимость блоков на странице
                 document.getElementById("userName").innerText = data.username;
                 document.getElementById("userInfo").style.display = "block";
                 document.getElementById("loginForm").style.display = "none";
                 // сохраняем в хранилище sessionStorage токен доступа
                 sessionStorage.setItem(tokenKey, data.accessToken);
-                console.log(data.access_token);
+                console.log(data.accessToken);
              }
             else {
                 // если произошла ошибка, из errorText получаем текст ошибки
