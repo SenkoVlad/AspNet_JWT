@@ -1,22 +1,58 @@
-﻿<div id="userInfo" style="display:none;">
+﻿@using System.Text.Json;
+@using AspNet_JWT_Client.Infrastructure
+@using AspNet_JWT_Client.Services
+
+<div id="userInfo" style="display:none;">
     <p>Вы вошли как: <span id="userName"></span></p>
     <input type="button" value="Выйти" id="logOut" />
 </div>
 <div id="loginForm">
     <h3>Вход на сайт</h3>
     <label>Введите email</label><br />
-    <input type="email" id="emailLogin" /> <br /><br />
+    <input type="email" @bind-value="@username"/> <br /><br />
     <label>Введите пароль</label><br />
-    <input type="password" id="passwordLogin" /><br /><br />
-    <input type="submit" id="submitLogin" value="Логин" />
+    <input type="password" @bind-value="@password" /><br /><br />
+    <input type="submit" @onclick="() => getToketAsync()" value="Логин" />
 </div>
 <div>
-    <input type="submit" id="getDataByLogin" value="Данные по логину" />
+    <input type="submit" @onclick="() => getDataByLogin()"  value="Данные по логину" />
+    <input  type="text" @bind-value="@login"/>
 </div>
 <div>
-    <input type="submit" id="getDataByRole" value="Данные по роли" />
+    <input type="submit" @onclick="() => getDataByRole()" value="Данные по роли" />
+    <input type="text" @bind-value="@role" />
 </div>
 
 @code {
+    [Inject] HttpClient httpClient { get; set; }
+    [Inject] ILocalStorageService localStorageService { get; set; }
+    [Inject] AuthService authService { get; set; }
 
+    string username;
+    string password;
+
+    string role;
+    string login;
+
+    public async Task getToketAsync()
+    {
+        var registerResult = await authService.LoginAsync(username, password);
+
+        if (registerResult != null)
+        {
+            login = registerResult.Username;
+        }
+    }
+
+    public async Task getDataByLogin()
+    {
+        var httpResponse = await httpClient.GetAsync("https://localhost:5001/api/values/getlogin");
+        login = await httpResponse.Content.ReadAsStringAsync();
+    }
+
+    public async Task getDataByRole()
+    {
+        var httpResponse = await httpClient.GetAsync("https://localhost:5001/api/values/getrole");
+        role = await httpResponse.Content.ReadAsStringAsync();
+    }
 }

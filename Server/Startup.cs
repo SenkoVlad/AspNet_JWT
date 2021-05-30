@@ -24,7 +24,7 @@ namespace AspNet_JWT
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("https://localhost:10000")
+                                      builder.WithOrigins("https://localhost:10001")
                                              .AllowAnyHeader()
                                              .AllowAnyMethod()
                                              .AllowCredentials();
@@ -39,11 +39,13 @@ namespace AspNet_JWT
                         {
                             ValidateIssuer = true,
                             ValidIssuer = AuthOptions.ISSUER,
-                          
+
                             ValidateAudience = true,
                             ValidAudience = AuthOptions.AUDIENCE,
-                            
+
                             ValidateLifetime = true,
+
+                            ClockSkew = TimeSpan.Zero,
 
                             IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                             ValidateIssuerSigningKey = true,

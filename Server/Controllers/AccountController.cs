@@ -19,9 +19,9 @@ namespace AspNet_JWT.Controllers
         };
 
         [HttpPost("/token")]
-        public IActionResult Token(string username, string password)
+        public IActionResult Token([FromBody] Person person)
         {
-            var identity = GetIdentity(username, password);
+            var identity = GetIdentity(person.Login, person.Password);
             if(identity == null)
             {
                 return BadRequest(new { errorText = "Invalid login or password" });
@@ -42,7 +42,7 @@ namespace AspNet_JWT.Controllers
             var response = new
             {
                 accessToken = encodedJwt,
-                username = username
+                username = person.Login
             };
 
             return Json(response);

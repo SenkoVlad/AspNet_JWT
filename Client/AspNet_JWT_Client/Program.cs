@@ -1,11 +1,10 @@
+using AspNet_JWT_Client.Infrastructure;
+using AspNet_JWT_Client.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AspNet_JWT_Client
@@ -16,6 +15,13 @@ namespace AspNet_JWT_Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
+
+            builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
+
+            builder.Services.AddAuthorizationCore();
+            builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
+
+            builder.Services.AddScoped<AuthService>();
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
